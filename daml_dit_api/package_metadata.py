@@ -50,6 +50,13 @@ class CatalogInfo:
     icon_file: 'Optional[str]' = None
 
 
+@dataclass(frozen=True)
+class DamlModelInfo:
+    name: str
+    version: str
+    main_package_id: str
+
+
 DABL_META_NAME = 'dabl-meta.yaml'
 
 
@@ -57,6 +64,7 @@ DABL_META_NAME = 'dabl-meta.yaml'
 class PackageMetadata:
     catalog: 'Optional[CatalogInfo]'
     subdeployments: 'Optional[Sequence[str]]'
+    daml_model: 'Optional[DamlModelInfo]'
     integration_types: 'Optional[Sequence[IntegrationTypeInfo]]'
 
     # Deprecated in favor of integration_types
