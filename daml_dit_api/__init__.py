@@ -1,6 +1,7 @@
 from typing import  Optional
 
 from .package_metadata import \
+    DamlModelInfo, \
     IntegrationTypeFieldInfo, \
     IntegrationTypeInfo, \
     CatalogInfo, \
