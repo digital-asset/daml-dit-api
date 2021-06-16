@@ -32,7 +32,7 @@ class IntegrationTypeInfo:
     fields: 'Sequence[IntegrationTypeFieldInfo]'
     entrypoint: str
     env_class: 'Optional[str]'
-    runtime: 'Optional[str]' = 'python-file'
+    runtime: 'Optional[str]' = None
     help_url: 'Optional[str]' = None
     instance_template: 'Optional[str]' = None
     tags: 'Sequence[str]' = field(default_factory=_empty_tags)
@@ -78,7 +78,7 @@ class PackageMetadata:
     integrations: 'Optional[Sequence[IntegrationTypeInfo]]'
 
 
-def normalize_catalog(self, catalog: "CatalogInfo") -> "CatalogInfo":
+def normalize_catalog(catalog: "CatalogInfo") -> "CatalogInfo":
     """
     Normalize catalog information into the most current representation
     of the given attributes.  As the catalog format has changed, there
@@ -107,6 +107,21 @@ def normalize_catalog(self, catalog: "CatalogInfo") -> "CatalogInfo":
         updates["tags"] = list(catalog.tags) + [TAG_EXPERIMENTAL]
 
     return replace(catalog, **updates)
+
+
+def normalize_package_metadata(metadata: 'PackageMetadata') -> 'PackageMetadata':
+    updates = {}  # type: Dict[str, Any]
+
+    if metadata.catalog:
+        updates["catalog"] = normalize_catalog(metadata.catalog)
+
+    if metadata.integrations:
+        updates["integration_types"] = \
+            [*(metadata.integration_types or []), *metadata.integrations]
+        updates["integrations"] = None
+
+
+    return replace(metadata, **updates)
 
 
 def getIntegrationLogger():
