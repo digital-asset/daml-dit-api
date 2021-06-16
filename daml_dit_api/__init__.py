@@ -9,6 +9,7 @@ from .package_metadata import \
     DABL_META_NAME, \
     TAG_EXPERIMENTAL, \
     normalize_catalog, \
+    normalize_package_metadata, \
     getIntegrationLogger
 
 from .integration_runtime_spec import \

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "daml-dit-api"
-version = "0.4.2"
+version = "0.4.3"
 description = "Daml Hub DIT File API Package"
 authors = ["Mike Schaeffer <mike.schaeffer@digitalasset.com>"]
 readme = "README.md"
