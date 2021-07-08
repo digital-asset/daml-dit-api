@@ -21,6 +21,7 @@ class IntegrationTypeFieldInfo:
     default_value: 'Optional[str]' = None
     required: 'Optional[bool]' = True
     tags: 'Sequence[str]' = field(default_factory=_empty_tags)
+    field_context: 'Optional[str]' = None
 
 
 @dataclass(frozen=True)
@@ -65,7 +66,10 @@ class DamlModelInfo:
 
 
 DABL_META_NAME = 'dabl-meta.yaml'
+DIT_META_NAME = 'dit-meta.yaml'
 
+# Lookup names for package metadata. Listed in search order.
+DIT_META_NAMES = [ DIT_META_NAME, DABL_META_NAME ]
 
 @dataclass(frozen=True)
 class PackageMetadata:
