@@ -7,6 +7,9 @@ from .package_metadata import \
     CatalogInfo, \
     PackageMetadata, \
     DABL_META_NAME, \
+    DIT_META_NAME, \
+    DIT_META_NAMES, \
+    DIT_META_KEY_NAME, \
     TAG_EXPERIMENTAL, \
     normalize_catalog, \
     normalize_package_metadata, \
