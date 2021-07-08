@@ -65,6 +65,10 @@ class DamlModelInfo:
     main_package_id: str
 
 
+# Key name used to identify DIT metadata bundled into daml.yaml
+DIT_META_KEY_NAME = 'dit-meta'
+
+# The original and current names of the DIT metadata subfile.
 DABL_META_NAME = 'dabl-meta.yaml'
 DIT_META_NAME = 'dit-meta.yaml'
 
