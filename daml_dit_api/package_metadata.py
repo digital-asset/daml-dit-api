@@ -56,6 +56,7 @@ class CatalogInfo:
     short_description: 'Optional[str]' = None
     group_id: 'Optional[str]' = None
     icon_file: 'Optional[str]' = None
+    dit_if_requirement: 'Optional[str]' = None
 
 
 @dataclass(frozen=True)
