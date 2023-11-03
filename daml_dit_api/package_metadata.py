@@ -1,13 +1,31 @@
+from __future__ import annotations
+
 import logging
 import datetime
 from dataclasses import dataclass, field, replace
 from typing import Any, Dict, Optional, Sequence
 
+__all__ = [
+    "CatalogInfo",
+    "DABL_META_NAME",
+    "DIT_META_KEY_NAME",
+    "DIT_META_NAME",
+    "DIT_META_NAMES",
+    "DamlModelInfo",
+    "IntegrationTypeFieldInfo",
+    "IntegrationTypeInfo",
+    "PackageMetadata",
+    "TAG_EXPERIMENTAL",
+    "getIntegrationLogger",
+    "normalize_catalog",
+    "normalize_package_metadata",
+    "normalize_package_metadata",
+]
 
 TAG_EXPERIMENTAL = "experimental"
 
 
-def _empty_tags() -> 'Sequence[str]':
+def _empty_tags() -> Sequence[str]:
     return list()
 
 
@@ -17,26 +35,26 @@ class IntegrationTypeFieldInfo:
     name: str
     description: str
     field_type: str
-    help_url: 'Optional[str]' = None
-    default_value: 'Optional[str]' = None
-    required: 'Optional[bool]' = True
-    tags: 'Sequence[str]' = field(default_factory=_empty_tags)
-    field_context: 'Optional[str]' = None
+    help_url: Optional[str] = None
+    default_value: Optional[str] = None
+    required: Optional[bool] = True
+    tags: Sequence[str] = field(default_factory=_empty_tags)
+    field_context: Optional[str] = None
 
 
 @dataclass(frozen=True)
 class IntegrationTypeInfo:
-    artifact_hash: 'Optional[str]'
+    artifact_hash: Optional[str]
     id: str
     name: str
     description: str
-    fields: 'Sequence[IntegrationTypeFieldInfo]'
+    fields: Sequence[IntegrationTypeFieldInfo]
     entrypoint: str
-    env_class: 'Optional[str]'
-    runtime: 'Optional[str]' = None
-    help_url: 'Optional[str]' = None
-    instance_template: 'Optional[str]' = None
-    tags: 'Sequence[str]' = field(default_factory=_empty_tags)
+    env_class: Optional[str]
+    runtime: Optional[str] = None
+    help_url: Optional[str] = None
+    instance_template: Optional[str] = None
+    tags: Sequence[str] = field(default_factory=_empty_tags)
 
 
 @dataclass(frozen=True)
@@ -44,19 +62,19 @@ class CatalogInfo:
     name: str
     version: str
     description: str
-    release_date: 'Optional[datetime.date]'
-    author: 'Optional[str]'
-    url: 'Optional[str]'
-    email: 'Optional[str]'
-    license: 'Optional[str]'
-    experimental: 'Optional[bool]'
-    demo_url: 'Optional[str]'
-    source_url: 'Optional[str]'
-    tags: 'Sequence[str]' = field(default_factory=_empty_tags)
-    short_description: 'Optional[str]' = None
-    group_id: 'Optional[str]' = None
-    icon_file: 'Optional[str]' = None
-    dit_if_requirement: 'Optional[str]' = None
+    release_date: Optional[datetime.date]
+    author: Optional[str]
+    url: Optional[str]
+    email: Optional[str]
+    license: Optional[str]
+    experimental: Optional[bool]
+    demo_url: Optional[str]
+    source_url: Optional[str]
+    tags: Sequence[str] = field(default_factory=_empty_tags)
+    short_description: Optional[str] = None
+    group_id: Optional[str] = None
+    icon_file: Optional[str] = None
+    dit_if_requirement: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -67,27 +85,28 @@ class DamlModelInfo:
 
 
 # Key name used to identify DIT metadata bundled into daml.yaml
-DIT_META_KEY_NAME = 'dit-meta'
+DIT_META_KEY_NAME = "dit-meta"
 
 # The original and current names of the DIT metadata subfile.
-DABL_META_NAME = 'dabl-meta.yaml'
-DIT_META_NAME = 'dit-meta.yaml'
+DABL_META_NAME = "dabl-meta.yaml"
+DIT_META_NAME = "dit-meta.yaml"
 
 # Lookup names for package metadata. Listed in search order.
-DIT_META_NAMES = [ DIT_META_NAME, DABL_META_NAME ]
+DIT_META_NAMES = tuple([DIT_META_NAME, DABL_META_NAME])
+
 
 @dataclass(frozen=True)
 class PackageMetadata:
-    catalog: 'Optional[CatalogInfo]'
-    subdeployments: 'Optional[Sequence[str]]'
-    daml_model: 'Optional[DamlModelInfo]'
-    integration_types: 'Optional[Sequence[IntegrationTypeInfo]]'
+    catalog: Optional[CatalogInfo]
+    subdeployments: Optional[Sequence[str]]
+    daml_model: Optional[DamlModelInfo]
+    integration_types: Optional[Sequence[IntegrationTypeInfo]]
 
     # Deprecated in favor of integration_types
-    integrations: 'Optional[Sequence[IntegrationTypeInfo]]'
+    integrations: Optional[Sequence[IntegrationTypeInfo]]
 
 
-def normalize_catalog(catalog: "CatalogInfo") -> "CatalogInfo":
+def normalize_catalog(catalog: CatalogInfo) -> CatalogInfo:
     """
     Normalize catalog information into the most current representation
     of the given attributes.  As the catalog format has changed, there
@@ -118,20 +137,21 @@ def normalize_catalog(catalog: "CatalogInfo") -> "CatalogInfo":
     return replace(catalog, **updates)
 
 
-def normalize_package_metadata(metadata: 'PackageMetadata') -> 'PackageMetadata':
+def normalize_package_metadata(metadata: PackageMetadata) -> PackageMetadata:
     updates = {}  # type: Dict[str, Any]
 
     if metadata.catalog:
         updates["catalog"] = normalize_catalog(metadata.catalog)
 
     if metadata.integrations:
-        updates["integration_types"] = \
-            [*(metadata.integration_types or []), *metadata.integrations]
+        updates["integration_types"] = [
+            *(metadata.integration_types or []),
+            *metadata.integrations,
+        ]
         updates["integrations"] = None
-
 
     return replace(metadata, **updates)
 
 
 def getIntegrationLogger():
-    return logging.getLogger('integration')
+    return logging.getLogger("integration")
